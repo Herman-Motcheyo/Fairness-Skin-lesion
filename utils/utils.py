@@ -26,3 +26,19 @@ def augment_image(image):
     image = tf.clip_by_value(image, 0.0, 255.0)
 
     return tf.cast(image, tf.float32)
+
+def make_multimodal_dataset(images, metadata, labels, batch_size=32, shuffle=True, augment=False):
+    dataset = tf.data.Dataset.from_tensor_slices(((images, metadata), labels))
+
+    if shuffle:
+        dataset = dataset.shuffle(buffer_size=len(images))
+
+    if augment:
+        def augment_fn(inputs, label):
+            img, meta = inputs
+            img = augment_image(img)
+            return (img, meta), label
+
+        dataset = dataset.map(augment_fn, num_parallel_calls=tf.data.AUTOTUNE)
+
+    return dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
