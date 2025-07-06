@@ -1,6 +1,6 @@
 import tensorflow as tf
-
-
+import os
+import pandas as pd
 
 def augment_image(image):
     # Flip horizontal et vertical
@@ -42,3 +42,24 @@ def make_multimodal_dataset(images, metadata, labels, batch_size=32, shuffle=Tru
         dataset = dataset.map(augment_fn, num_parallel_calls=tf.data.AUTOTUNE)
 
     return dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
+
+
+
+
+def save_history_to_csv(history, fold_number, models_name, save_dir='histories'):
+    """
+    Sauvegarde l'historique d'entraînement dans un fichier CSV.
+
+    :param history: objet `History` retourné par `model.fit`
+    :param fold_number: entier indiquant le numéro du pli
+    :param save_dir: dossier de sauvegarde
+    """
+    os.makedirs(f'{save_dir}/{models_name}/fold_{fold_number}/', exist_ok=True)
+
+    hist_df = pd.DataFrame(history.history)    
+    hist_df['epoch'] = history.epoch
+
+    file_path = f'{save_dir}/{models_name}/fold_{fold_number}/history_fold_{fold_number}.csv'
+
+    hist_df.to_csv(file_path, index=False)
+    print(f"Historique sauvegardé : {file_path}")
