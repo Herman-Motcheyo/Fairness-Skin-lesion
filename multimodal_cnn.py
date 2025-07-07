@@ -1,5 +1,7 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import tensorflow as tf
-from stratified_cross_validator import StratifiedCrossValidator
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 
 from tensorflow.keras import layers, models
@@ -33,6 +35,7 @@ from keras import regularizers
 from keras.optimizers import Adam, SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from sklearn.metrics import f1_score, matthews_corrcoef
 
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import joblib
@@ -42,6 +45,9 @@ from datetime import datetime
 np.random.seed(123)
 import time
 
+
+from stratified_cross_validator import StratifiedCrossValidator
+from utils.data_preparation import handle_missing_values
 
 class MultimodalCNNFramework:
     """
@@ -447,7 +453,7 @@ class MultimodalCNNFramework:
 
         # Sauvegarde à chaque fold
         df = pd.DataFrame(self.evaluation_results)
-        df.to_csv(os.path.join(save_path, f"/{model_name}_evaluation_folds.csv"), index=False)
+        df.to_csv(os.path.join(save_path, f"{model_name}_evaluation_folds.csv"), index=False)
 
 
 
