@@ -29,7 +29,7 @@ print(f"Dataframe shape: {df.shape}")
     
 print(df['path'].isnull().sum(), "images non trouvées dans le dossier")
 
-NUMBER_OF_FOLDS = 10
+NUMBER_OF_FOLDS = 1
 
 validator = StratifiedCrossValidator(
     n_splits=NUMBER_OF_FOLDS,
@@ -50,17 +50,16 @@ mul_cnn = MultimodalCNNFramework(
         input_shape=(224, 224, 3), 
         num_classes=7, 
         batch_size=32, 
-        epochs=100, 
+        epochs=15, 
         learning_rate=0.001
     )
-
 
 histories = train_multiple_models(
     framework=mul_cnn,
     validator=validator,
     df=df,
     column_name_to_discretize=column_name_to_discretize,
-    models_to_train=['xception','mobilenetv2','resnet', 'vgg', 'efficientnet', 'densenet'],
-    NUMBER_OF_FOLDS=10,
+    models_to_train=[ 'efficientnet'],
+    NUMBER_OF_FOLDS=NUMBER_OF_FOLDS,
     save_dir='histories'
 )
