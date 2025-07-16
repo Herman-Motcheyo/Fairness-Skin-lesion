@@ -50,7 +50,7 @@ mul_cnn = MultimodalCNNFramework(
         input_shape=(224, 224, 3), 
         num_classes=7, 
         batch_size=32, 
-        epochs=2, 
+        epochs=100, 
         learning_rate=0.001
     )
 
@@ -61,6 +61,6 @@ histories = train_multiple_models(
     df=df,
     column_name_to_discretize=column_name_to_discretize,
     models_to_train=['xception','mobilenetv2','resnet', 'vgg', 'efficientnet', 'densenet'],
-    NUMBER_OF_FOLDS=1,
+    NUMBER_OF_FOLDS=10,
     save_dir='histories'
 )
