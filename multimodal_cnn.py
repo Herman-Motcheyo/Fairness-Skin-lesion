@@ -347,26 +347,25 @@ class MultimodalCNNFramework:
         print("----------------  Tous les modèles compilés--------------------")
         
 
-    def create_callbacks(self, model_name, fold, save_dir="models"):
-        """Crée les callbacks pour l'entraînement."""
+    def create_callbacks(self, model_name, fold, save_dir="models", monitor='val_loss'):
         os.makedirs(f'{save_dir}/fold_{fold}/', exist_ok=True)
-        
+    
         callbacks_list = [
             callbacks.ReduceLROnPlateau(
-                monitor='val_loss',
-                factor=0.5,
-                patience=10,
-                min_lr=1e-7,
-                verbose=1
+            monitor=monitor,
+            factor=0.5,
+            patience=10,
+            min_lr=1e-7,
+            verbose=1
             ),
-            
+        
             callbacks.EarlyStopping(
-                monitor='val_loss',
+                monitor=monitor,
                 patience=20,
                 restore_best_weights=True,
                 verbose=1
             ),
-            
+        
             callbacks.ModelCheckpoint(
                 filepath=f"{save_dir}/fold_{fold}/{model_name}_fold_{fold}_best.keras",
                 monitor='val_accuracy',
@@ -374,13 +373,14 @@ class MultimodalCNNFramework:
                 save_weights_only=False,
                 verbose=1
             ),
-            
+        
             callbacks.CSVLogger(
                 filename=f"{save_dir}/fold_{fold}/{model_name}_fold_{fold}_training.csv"
             )
         ]
-        
+    
         return callbacks_list
+
     
     def train_model(self, model_name, train_data, val_data, test_data, y_true, fold):
         """Entraîne un modèle multimodal."""
@@ -420,6 +420,10 @@ class MultimodalCNNFramework:
         self.summarize_results(save_path=f'models/{model_name}/fold_{fold}/')
         
         print(f" Entraînement terminé en {training_time:.2f}s")
+        model.save(f'Model_{model_name}_fold_{fold}.keras')
+        #loaded_model = tf.keras.models.load_model(f'Model_{model_name}_fold_{fold}.keras')
+        #print(loaded_model)
+
         return history
     
     
