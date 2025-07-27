@@ -52,23 +52,12 @@ from utils.data_preparation import handle_missing_values
 class MultimodalCNNFramework:
     """
     Framework CNN multimodal combinant images et métadonnées 
-    pour la prediction  du cancer et la sélection de l'équité avec sélection du meilleur modèle.
     """
     
     def __init__(self, input_shape=(224, 224, 3), num_classes=7, 
                  batch_size=32, epochs=100, learning_rate=0.001,
                  metadata_cols=None):
-        """
-        Initialise le framework CNN multimodal.
         
-        Args:
-            input_shape: Forme des images (hauteur, largeur, canaux)
-            num_classes: Nombre de classes à prédire
-            batch_size: Taille des batches
-            epochs: Nombre d'époques d'entraînement
-            learning_rate: Taux d'apprentissage initial
-            metadata_cols: Liste des colonnes de métadonnées à utiliser
-        """
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.batch_size = batch_size

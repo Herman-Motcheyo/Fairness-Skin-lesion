@@ -12,26 +12,11 @@ import json
 warnings.filterwarnings('ignore')
 
 class StratifiedCrossValidator:
-    """
-    Validation croisée stratifiée avec contrôle des biais démographiques
-    et géographiques pour l'évaluation équitable de modèles de classification.
-    Supporte maintenant le split en train/test/validation.
-    """
     
     def __init__(self, n_splits: int = 5, random_state: int = 42, 
                  shuffle: bool = True, min_samples_per_class: int = 10,
                  test_size: float = 0.2, val_size: float = 0.2):
-        """
-        Initialise le validateur croisé stratifié.
         
-        Args:
-            n_splits: Nombre de folds pour la validation croisée
-            random_state: Seed pour la reproductibilité
-            shuffle: Mélanger les données avant le split
-            min_samples_per_class: Nombre minimum d'échantillons par classe
-            test_size: Proportion des données pour le test set (0.0-1.0)
-            val_size: Proportion des données restantes pour la validation (0.0-1.0)
-        """
         self.n_splits = n_splits
         self.random_state = random_state
         self.shuffle = shuffle
@@ -170,9 +155,6 @@ class StratifiedCrossValidator:
                 val_dist = val_data[target_col].value_counts(normalize=True)
                 val_pct = val_dist.get(class_name, 0) * 100
             
-            print(f"   {class_name}:")
-            print(f"     Original: {orig_pct:.1f}%")
-            print(f"     Train: {train_pct:.1f}%, Test: {test_pct:.1f}%, Val: {val_pct:.1f}%")
     
     def _analyze_metadata_distribution(self, data: pd.DataFrame, 
                                      target_col: str, metadata_cols: List[str]):
